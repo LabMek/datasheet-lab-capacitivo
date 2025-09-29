@@ -12,8 +12,8 @@ La plantilla busca dar un formato claro, estandarizado y profesional a la docume
 ## Contenido del repositorio
 
 - `datasheet.cls`: Clase principal de LaTeX para generar el formato del datasheet.  
-- `example.tex`: Documento de ejemplo mostrando cómo usar la clase.  
-- `example.pdf`: Ejemplo compilado del resultado final.
+- `datasheet.tex`: Documento de ejemplo mostrando cómo usar la clase.  
+- `datasheet.pdf`: Ejemplo compilado del resultado final.
 
 ## Objetivo
 
