@@ -1,0 +1,128 @@
+%% Datasheet ejemplo: Sensor Capacitivo de Nivel
+\documentclass[10pt]{datasheet}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{isodate}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{circuitikz}
+\usepackage{tabularx, threeparttable, multirow}
+\usetikzlibrary{calc}
+
+\title{Sensor Capacitivo de Nivel}
+\author{Andres Morales Martínez}
+\date{2025-ii}
+\revision{Revisión 1}
+\companylogo{
+	\includegraphics[width=0.3\linewidth]{imgs/logo/stark.png}
+}
+
+\begin{document}
+\maketitle
+
+\section{Aplicaciones}
+\begin{itemize}
+    \item Medición de nivel de agua en tanques portátiles.
+    \item Compatible con agua potable y agua destilada.
+    \item Monitoreo en sistemas de bajo consumo con baterías de 9 V.
+\end{itemize}
+
+\section{Descripción General}
+El sensor capacitivo de nivel detecta la variación en la constante dieléctrica 
+del medio (aire, agua, aceite, etc.) para determinar el nivel de llenado en un depósito.  
+Se caracteriza por su bajo consumo de energía y facilidad de integración en sistemas embebidos.  
+
+\section{Principio de Funcionamiento}
+El dispositivo consiste en un par de electrodos dispuestos de forma paralela que forman un capacitor.  
+Cuando el medio entre los electrodos cambia (por ejemplo, de aire a agua), la capacitancia varía de acuerdo a:  
+
+\[
+C = \varepsilon_r \varepsilon_0 \frac{A}{d}
+\]
+
+donde $\varepsilon_r$ es la permitividad relativa del medio.  
+Un circuito de acondicionamiento convierte esta variación de capacitancia en una señal eléctrica proporcional al nivel detectado.  
+
+% Cambiamos a una sola columna desde aquí
+\onecolumn
+
+\section{Especificaciones Eléctricas}
+\begin{table}[h]
+\begin{threeparttable}
+\caption{Características Eléctricas Básicas}
+\begin{tabularx}{\textwidth}{l | c | c c c | c | X}
+    \thickhline
+    \textbf{Parámetro} & \textbf{Símbolo} & \textbf{Mín.} & \textbf{Típ.} & \textbf{Máx.} &
+    \textbf{Unidad} & \textbf{Condiciones} \\
+    \hline
+    Tensión de alimentación & $V_{CC}$ & 7.5 & 9.0 & 12 & V & Fuente portátil (pila o batería) \\
+    Señal de salida & $V_{out}$ & 0 & – & 5 & V & Señal analógica proporcional al nivel \\
+    Impedancia de salida & $Z_{out}$ & – & 10 & – & k$\Omega$ & Medido a 1 kHz \\
+    Consumo de corriente & $I_{CC}$ & – & 20 & 30 & mA & A 9 V \\
+    \thickhline
+\end{tabularx}
+\end{threeparttable}
+\end{table}
+
+\section{Características Estáticas}
+
+\subsection{Precisión}
+La precisión se refiere a la cercanía entre el valor medido y el valor real del nivel.  
+En este sensor depende de la estabilidad del circuito de conversión y de las propiedades dieléctricas del líquido.  
+
+\subsection{Exactitud}
+La exactitud se define como la capacidad del sensor de representar el nivel verdadero, considerando todos los errores sistemáticos.  
+Puede ajustarse mediante calibración con líquidos de referencia (ej. agua destilada).  
+
+\subsection{Linealidad}
+La salida es aproximadamente lineal con el nivel del fluido dentro del rango de operación.  
+La no linealidad típica es menor al 2\% del FSO.  
+
+\subsection{Sensibilidad}
+La sensibilidad indica el cambio en la señal de salida por cada milímetro de variación en el nivel.  
+Depende del área de los electrodos y la geometría del sensor.  
+
+\subsection{Rango de Entrada y Salida}
+El rango de entrada corresponde al nivel de líquido entre 0 y 30 cm.  
+El rango de salida es una señal analógica entre 0–5 V, escalada proporcionalmente.  
+
+\subsection{FSO (Full Scale Output)}
+El FSO corresponde al valor máximo de salida (5 V) cuando el tanque está en el nivel máximo especificado (30 cm).  
+
+\section{Partes de Ensamble}
+El sensor se compone de:  
+\begin{itemize}
+    \item Electrodos paralelos encapsulados en material dieléctrico.  
+    \item Circuito de acondicionamiento de señal.  
+    \item Salida analógica en conector de 3 pines (Vcc, GND, Vout).  
+    \item Encapsulado resistente al agua (IP65).  
+\end{itemize}
+
+\section{Circuito de Conexión y Etapas}
+\begin{figure}[h]
+    \centering
+    \begin{circuitikz}[scale=1]
+        % Sensor capacitor
+        \draw (0,0) to[C,l=$C_{sensor}$] (0,-2);
+        % Excitation
+        \draw (-2,0) node[left]{Excitación AC} to[sinusoidal voltage source] (0,0);
+        % Amp
+        \draw (0,-2) to[short] (2,-2) node[op amp, noinv input up, anchor=-](opamp) {};
+        \draw (0,0) -| (opamp.+);
+        \draw (2,-2) -- (opamp.-);
+        % Output
+        \draw (opamp.out) -- +(2,0) node[right]{$V_{out}$};
+    \end{circuitikz}
+    \caption{Etapas de conexión del sensor capacitivo de nivel}
+\end{figure}
+
+\section{Comentarios y Recomendaciones}
+\begin{itemize}
+    \item Para líquidos con baja constante dieléctrica, se recomienda calibrar antes de usar.  
+    \item Evitar el uso en medios altamente conductivos sin aislamiento adecuado.  
+    \item La linealidad puede mejorarse usando geometrías cilíndricas en lugar de placas planas.  
+    \item Se sugiere emplear un filtro RC o un ADC con promedio digital para reducir el ruido.  
+\end{itemize}
+
+\end{document}
